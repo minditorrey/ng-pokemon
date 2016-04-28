@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('pokeApp', [])
-.controller('mainController', function($scope, $http) {
+angular.module('pokeApp', ['ui.bootstrap'])
+.controller('mainController', function($scope, $http, $uibModal) {
 
 
 
@@ -17,7 +17,38 @@ angular.module('pokeApp', [])
 		console.log('err:', err)
 	})
 
+	$scope.selectPokemon = function(pokemon) {
+		console.log(pokemon);
+		var modalInstance = $uibModal.open({
+			templateUrl: 'pokeModal.html',
+			controller: 'pokeModalController',
+			resolve: {
+				pokemon:function() {
+					return pokemon;
+				}
+			}
+		});
 
-
-
+		modalInstance.result.then(function() {
+			console.log('success');
+		}, function () {
+			console.log('failure');
+		})
+	};
 })
+
+.controller('pokeModalController', function($scope, $uibModalInstance, pokemon) {
+	console.log('pokeModalController');
+
+	$scope.pokemon = pokemon;
+	
+	$scope.ok = function() {
+		$uibModalInstance.close();
+	};
+
+	$scope.cancel = function() {
+		$uibModalInstance.dismiss();
+	};
+});
+
+
