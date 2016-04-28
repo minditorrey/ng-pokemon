@@ -1,15 +1,22 @@
 'use strict';
 
-angular.module('pokeApp', ['ui.bootstrap'])
-.controller('mainController', function($scope, $http, $uibModal) {
+var app = angular.module('pokeApp', ['ui.bootstrap'])
+
+.service('Pokemon', function($http) {
+	this.getAll = function() {
+		return $http({
+		url: 'http://pokeapi.co/api/v2/pokedex/1/',
+		method: 'GET'
+		});
+	};
+})
+
+.controller('mainController', function($scope, $http, Pokemon, $uibModal) {
 
 
 
 	//returns a promise to tell us what happened
-	$http({
-		url: 'http://pokeapi.co/api/v2/pokedex/1/',
-		method: 'GET'
-	})
+	Pokemon.getAll()
 	.then(function(res) {
 		$scope.pokeList = res.data.pokemon_entries;
 	})
@@ -41,7 +48,7 @@ angular.module('pokeApp', ['ui.bootstrap'])
 	console.log('pokeModalController');
 
 	$scope.pokemon = pokemon;
-	
+
 	$scope.ok = function() {
 		$uibModalInstance.close();
 	};
